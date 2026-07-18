@@ -1,54 +1,92 @@
-## Goal
 
-Turn the static `Testimonial` block into a morphing carousel that cycles through 4 owner quotes with an editorial blur-crossfade, auto-advances every 6s, and offers dot controls. Stats row below stays as-is.
+## Scope
 
-## File
+Follow the Motiva Website Realignment PRD. Content-model + IA change only — no visual redesign. Reuse existing tokens (navy `ink`, champagne `gilt`) and components.
 
-`src/components/motiva/Testimonial.tsx` (single-file change).
+## 1. Data model changes (`src/data/projects.ts` + new `src/data/land.ts`)
 
-## Quotes (Motiva voice, tied to residences in `src/data/projects.ts`)
+**Project schema (extend)**
+- Add `projectStatus: "pre-sale" | "ongoing" | "delivered"` and `phaseLabel?: string`.
+- Keep existing fields for backward compat, but stop rendering `priceLabel`, `priceNaira`, `delivery`, and per-unit `price` on any pre-sale/ongoing project.
+- Add `whatsappCtaText?: string` (optional override).
 
-1. **Elena Söderberg — Owner, Saoirse Villa (Old GRA)**
-   "Motiva didn't sell us a house. They listened for a year, then drew the one we didn't know how to describe."
-2. **Adaeze Okonkwo — Owner, Harmony Terraces (Life Camp, Abuja)**
-   "Every detail was considered before we ever asked. The house arrived already knowing us."
-3. **Tunde Bakare — Owner, Linea Row (Ikoyi)**
-   "Two years in and nothing has aged. That is the quietest luxury I know."
-4. **Ngozi & Femi Adeyemi — Owners, Ember Court (Katampe)**
-   "We came for the address. We stayed for the way they still answer the phone."
+**Reseed real inventory** (all six as `pre-sale`, phaseLabel `"Review & planning"`):
+- Lifecamp — 4 Bedroom Terrace
+- Guzape — 5 Bedroom fully detached with BQ
+- Gudu — 5 Bedroom fully detached with BQ
+- Kaura — 4 Bedroom fully detached with BQ (separate listing)
+- Kaura — 4 Bedroom Terrace with BQ (separate listing)
+- Kaura — 3 Bedroom apartment (separate listing)
 
-(User can swap any before build if preferred.)
+Remove all fabricated "delivered" residences (Saoirse, Linea Row, Ember Court, Harmony Terraces, Casa Solano, Kestrel Lodge, Aerie House, etc.) since no delivered projects actually exist. Kept covers/imagery reused across the six real listings.
 
-## Interaction
+**New `Land` type** (`src/data/land.ts`)
+```
+Land {
+  slug, name, location: "Katampe Extension",
+  sizes: number[] (SQM options),
+  status: "available" | "reserved" | "sold",
+  estateAmenities?: string[],
+  photos: string[], description, whatsappCtaText?
+}
+```
+Seed: **Lanzarote** (200/250/350/500 SQM) and **Kingspark** (250/450 SQM).
 
-- **Auto-advance:** 6s per quote, pauses on hover and on focus-within.
-- **Manual:** 4 dot buttons under the quote — `aria-label="Show testimonial N"`, `aria-current` on active.
-- **Keyboard:** dots are real `<button>`s; arrow-key nav optional (skip for now to keep scope tight).
-- **Reduced motion:** `prefers-reduced-motion` → no blur, instant swap, no auto-advance (static first quote with dots).
+## 2. Routing / IA
 
-## Morph animation
+- New routes:
+  - `src/routes/land.tsx` — listing
+  - `src/routes/land.$slug.tsx` — detail (with SQM size selector feeding WhatsApp CTA)
+- Update `Nav.tsx` to insert **Land** between Residences and Services.
+- Keep existing `projects.*` routes; retire fabricated slugs.
 
-Blur + fade crossfade, ~700ms, `cubic-bezier(0.2, 0.7, 0.2, 1)`:
+## 3. Shared components
 
-- Outgoing: `opacity 1 → 0`, `filter blur(0) → blur(8px)`, `translateY(0 → -6px)`.
-- Incoming: reverse, staggered 120ms after outgoing starts.
-- Both quote and attribution line animate together as one group so name/residence morph in sync.
-- Absolutely-positioned stacked layers inside a `relative` wrapper with a fixed min-height (measured from tallest quote at md breakpoint) to prevent layout jump.
+- `StatusBadge.tsx` — renders "Pre-sale — enquire for current pricing" / "Ongoing — {phaseLabel}" / "Delivered". For land: Available / Reserved / Sold.
+- `PaymentPlanBlock.tsx` — static sitewide copy: *"Flexible payment plans available — typically 12 months for properties, 3–4 months for land. Terms negotiable — contact us to discuss."* Rendered on every project + land detail near CTA.
+- `WhatsAppCta.tsx` — builds `https://wa.me/2348153242398?text=` with pre-filled `"Hello Motiva, I'd like to enquire about {name} ({size} SQM)."`
+- Enquiry form (existing `ContactCTA` + `contact.tsx`) accepts a `?project=` query param, rendered as read-only "Regarding:" field and passed as hidden input.
 
-Implemented with Tailwind utilities + inline `style={{ transition, filter, opacity, transform }}` — no new deps. State: `const [i, setI] = useState(0)` + `useEffect` interval.
+## 4. Page-level changes
 
-## Attribution update
+**Home (`routes/index.tsx`)**
+- Hero copy audit: no "portfolio delivered" language, keep "Est. 2010".
+- Featured Residences module: show all six pre-sale cards with status badge + WhatsApp CTA, no price/date.
+- New **Land teaser** module linking to `/land` (2-card strip: Lanzarote, Kingspark).
+- **Testimonial**: replace with founder/process-credibility block (three-step phase indicator: Approvals → Plans approved → Construction). Delete fabricated quotes carousel.
+- Stat counters: replace "120 Homes Delivered / Est. 2010 / 2 Cities" with honest ones — "6 Residences in pre-sale / 2 Land parcels / Est. 2010 / Lagos & Abuja" (or drop the delivered counter entirely).
 
-Current single line becomes: `{name}` · thin divider · `Owner, {residence}` — same styling tokens (`text-ink`, `text-ink/60`, `tracking-[0.2em] uppercase text-[11px]`).
+**Residences listing (`routes/projects.index.tsx`)**
+- Optional status filter chips (Pre-sale / Ongoing / Delivered).
+- Cards for pre-sale/ongoing: name, location, unit type, phase label, WhatsApp CTA — no price, no date.
 
-## Non-goals
+**Residence detail (`routes/projects.$slug.tsx`)**
+- Status badge at top.
+- Hide price/delivery/units-with-prices for pre-sale/ongoing.
+- Per-project amenities (already per-project; leave as-is).
+- `PaymentPlanBlock` near CTA. Primary CTA = WhatsApp pre-filled with project name. Secondary CTA = enquiry form link with `?project=slug`.
 
-- No SVG goo filter, no background portrait / Ken Burns (kept editorial per your brand).
-- No changes to the stats row, section chrome, or surrounding sections.
-- No new data file — quotes live inline in `Testimonial.tsx` as a typed const array.
+**Land listing (`routes/land.tsx`)** & **detail (`routes/land.$slug.tsx`)**
+- Same tone as Residences. Card shows location, sizes-available range, status. Detail page has SQM selector, description, PaymentPlanBlock, WhatsApp CTA pre-filled with parcel + size.
+
+**Contact (`routes/contact.tsx`)**
+- Keep interest categories. Read `?project=` from URL, show as read-only "Regarding:" field.
+
+## 5. Removed / untouched
+
+Untouched: Method, Pillars, Gallery, Journal, Footer, About, typography, spacing, tokens.
+Removed: Testimonial component's fabricated quotes (replaced by credibility block), fabricated delivered residences, `.lovable/plan.md` (superseded).
+
+## Out of scope (per PRD §12)
+
+- Subscriber portal / login / dashboard
+- Automated payment reminders
+- Search/filter across large catalogue
+- Any pricing calculator
 
 ## Technical notes
 
-- Uses existing tokens only (`ink`, `ivory`, `gilt`) — no hex.
-- `min-h-[…]` sized generously for the longest quote at each breakpoint so morph never nudges the stats row.
-- Interval cleared on unmount and reset when user clicks a dot (restart 6s timer from that quote).
+- Keep existing `Project` shape's optional fields to avoid touching Residences/Featured components' props; add new required fields with sensible defaults.
+- All copy uses `text-ink`, `text-ink/60`, `bg-ivory`, `text-gilt` — no hex.
+- WhatsApp number sourced from `ContactCTA.tsx` (`+234 815 324 2398`).
+- Land routes use flat file naming: `land.tsx`, `land.$slug.tsx`.

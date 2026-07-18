@@ -12,10 +12,10 @@ if (!CustomEase.get("motivaCurtain")) {
 type NavLink = { label: string; to: string; hash?: boolean };
 const links: NavLink[] = [
   { label: "Residences", to: "/projects" },
+  { label: "Land", to: "/land" },
   { label: "Services", to: "/services" },
   { label: "Studio", to: "/about" },
   { label: "Gallery", to: "/gallery" },
-  { label: "Journal", to: "/#journal", hash: true },
   { label: "Contact", to: "/contact" },
 ];
 

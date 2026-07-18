@@ -4,10 +4,10 @@ import { Hero } from "@/components/motiva/Hero";
 import { Marquee } from "@/components/motiva/Marquee";
 import { About } from "@/components/motiva/About";
 import { Residences } from "@/components/motiva/Residences";
+import { LandTeaser } from "@/components/motiva/LandTeaser";
 import { Pillars } from "@/components/motiva/Pillars";
 import { Process } from "@/components/motiva/Process";
 import { Gallery } from "@/components/motiva/Gallery";
-import { Testimonial } from "@/components/motiva/Testimonial";
 import { Journal } from "@/components/motiva/Journal";
 import { ContactCTA } from "@/components/motiva/ContactCTA";
 import { Footer } from "@/components/motiva/Footer";
@@ -25,10 +25,10 @@ function Index() {
       <Marquee />
       <About />
       <Residences />
+      <LandTeaser />
       <Pillars />
       <Process />
       <Gallery />
-      <Testimonial />
       <Journal />
       <ContactCTA />
       <Footer />
