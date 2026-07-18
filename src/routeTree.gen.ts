@@ -12,13 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as LandRouteImport } from './routes/land'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
+import { Route as LandIndexRouteImport } from './routes/land.index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
+import { Route as LandSlugRouteImport } from './routes/land.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -33,6 +36,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandRoute = LandRouteImport.update({
+  id: '/land',
+  path: '/land',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -65,10 +73,20 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProjectsRoute,
 } as any)
+const LandIndexRoute = LandIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LandRoute,
+} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ProjectsRoute,
+} as any)
+const LandSlugRoute = LandSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => LandRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -77,10 +95,13 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
+  '/land': typeof LandRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/land/$slug': typeof LandSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/land/': typeof LandIndexRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -91,7 +112,9 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/land/$slug': typeof LandSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/land': typeof LandIndexRoute
   '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -101,10 +124,13 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
+  '/land': typeof LandRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/land/$slug': typeof LandSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/land/': typeof LandIndexRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -115,10 +141,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/faq'
     | '/gallery'
+    | '/land'
     | '/projects'
     | '/services'
     | '/sitemap.xml'
+    | '/land/$slug'
     | '/projects/$slug'
+    | '/land/'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -129,7 +158,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/services'
     | '/sitemap.xml'
+    | '/land/$slug'
     | '/projects/$slug'
+    | '/land'
     | '/projects'
   id:
     | '__root__'
@@ -138,10 +169,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/faq'
     | '/gallery'
+    | '/land'
     | '/projects'
     | '/services'
     | '/sitemap.xml'
+    | '/land/$slug'
     | '/projects/$slug'
+    | '/land/'
     | '/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -151,6 +185,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   GalleryRoute: typeof GalleryRoute
+  LandRoute: typeof LandRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -177,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/land': {
+      id: '/land'
+      path: '/land'
+      fullPath: '/land'
+      preLoaderRoute: typeof LandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -221,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof ProjectsRoute
     }
+    '/land/': {
+      id: '/land/'
+      path: '/'
+      fullPath: '/land/'
+      preLoaderRoute: typeof LandIndexRouteImport
+      parentRoute: typeof LandRoute
+    }
     '/projects/$slug': {
       id: '/projects/$slug'
       path: '/$slug'
@@ -228,8 +277,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof ProjectsRoute
     }
+    '/land/$slug': {
+      id: '/land/$slug'
+      path: '/$slug'
+      fullPath: '/land/$slug'
+      preLoaderRoute: typeof LandSlugRouteImport
+      parentRoute: typeof LandRoute
+    }
   }
 }
+
+interface LandRouteChildren {
+  LandSlugRoute: typeof LandSlugRoute
+  LandIndexRoute: typeof LandIndexRoute
+}
+
+const LandRouteChildren: LandRouteChildren = {
+  LandSlugRoute: LandSlugRoute,
+  LandIndexRoute: LandIndexRoute,
+}
+
+const LandRouteWithChildren = LandRoute._addFileChildren(LandRouteChildren)
 
 interface ProjectsRouteChildren {
   ProjectsSlugRoute: typeof ProjectsSlugRoute
@@ -251,6 +319,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   GalleryRoute: GalleryRoute,
+  LandRoute: LandRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
