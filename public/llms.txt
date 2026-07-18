@@ -1,0 +1,12 @@
+# Motiva Real Estate
+
+> Contemporary residential architecture and development across Lagos, Abuja, and Port Harcourt — a small portfolio of villas, apartments, penthouses, and serviced plots for buyers who ask their spaces to mean something.
+
+## Pages
+
+- [Home](/): Studio overview and featured residences.
+- [About](/about): The studio, its people, and its approach.
+- [Residences](/projects): Current portfolio with filters by city, type, beds, and price.
+- [Gallery](/gallery): Interiors, exteriors, kitchens, and details from delivered residences.
+- [FAQ](/faq): Buying, payments, diaspora purchase, and inspections.
+- [Contact](/contact): Speak to a specialist or book a private site inspection.
