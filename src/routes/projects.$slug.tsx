@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { getProject, type Project } from "@/data/projects";
-import { PageHeader } from "@/components/motiva/PageHeader";
-import { ArrowUpRight, MapPin, Bed, Bath, Ruler, CalendarClock, Check } from "lucide-react";
+import { ArrowUpRight, MapPin, Bed, Bath, Home as HomeIcon, Check } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SubscribeModal } from "@/components/motiva/SubscribeModal";
+import { StatusBadge } from "@/components/motiva/StatusBadge";
+import { PaymentPlanBlock } from "@/components/motiva/PaymentPlanBlock";
+import { WhatsAppCta, projectWhatsAppText } from "@/components/motiva/WhatsAppCta";
 
 export const Route = createFileRoute("/projects/$slug")({
   loader: ({ params }) => {
@@ -16,7 +18,7 @@ export const Route = createFileRoute("/projects/$slug")({
     meta: loaderData
       ? [
           { title: `${loaderData.project.name} — Motiva` },
-          { name: "description", content: `${loaderData.project.tagline} ${loaderData.project.location}. ${loaderData.project.priceLabel}.` },
+          { name: "description", content: `${loaderData.project.tagline} ${loaderData.project.location}. Pre-sale — enquire for current terms.` },
           { property: "og:title", content: `${loaderData.project.name} — Motiva` },
           { property: "og:description", content: `${loaderData.project.tagline} ${loaderData.project.location}.` },
         ]
@@ -47,7 +49,7 @@ export const Route = createFileRoute("/projects/$slug")({
       <div className="text-center max-w-md">
         <div className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">404 · No such residence</div>
         <h1 className="font-display text-5xl mb-4">Not in our portfolio.</h1>
-        <p className="text-ink/60 mb-8">The residence you're looking for isn't part of Motiva's current or past work.</p>
+        <p className="text-ink/60 mb-8">The residence you're looking for isn't part of Motiva's current work.</p>
         <Link to="/projects" className="text-[13px] tracking-wide bg-ink text-ivory px-5 py-2 rounded-full hover:bg-ink/90">
           Browse all residences
         </Link>
@@ -60,7 +62,7 @@ export const Route = createFileRoute("/projects/$slug")({
 function ProjectDetail() {
   const { project } = Route.useLoaderData() as { project: Project };
   const [subscribeOpen, setSubscribeOpen] = useState(false);
-
+  const showSpecs = project.projectStatus === "delivered";
 
   return (
     <>
@@ -82,10 +84,8 @@ function ProjectDetail() {
           </nav>
 
           <div className="mt-auto pb-16 md:pb-20">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gilt text-ink text-[10px] tracking-[0.25em] uppercase">
-                {project.status}
-              </span>
+            <div className="flex items-center gap-3 mb-6 flex-wrap">
+              <StatusBadge status={project.projectStatus} phaseLabel={project.phaseLabel} />
               <span className="text-[11px] tracking-[0.3em] uppercase text-ivory/70 inline-flex items-center gap-2">
                 <MapPin className="h-3 w-3" strokeWidth={1.5} /> {project.location}
               </span>
@@ -98,14 +98,13 @@ function ProjectDetail() {
         </div>
       </section>
 
-      {/* Quick facts */}
+      {/* Quick facts — no price, no delivery date */}
       <section className="border-b border-ink/10 bg-ivory">
-        <div className="mx-auto max-w-[1500px] px-6 md:px-10 py-8 grid grid-cols-2 md:grid-cols-5 gap-6">
-          <Fact icon={<Ruler className="h-4 w-4" strokeWidth={1.25} />} label={project.propertyType === "Land" ? "Plot size" : "Interior"} value={`${project.sqft.toLocaleString()} ${project.propertyType === "Land" ? "sqm" : "sqft"}`} />
+        <div className="mx-auto max-w-[1500px] px-6 md:px-10 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+          <Fact icon={<HomeIcon className="h-4 w-4" strokeWidth={1.25} />} label="Type" value={project.buildingType} />
           {project.beds > 0 && <Fact icon={<Bed className="h-4 w-4" strokeWidth={1.25} />} label="Bedrooms" value={String(project.beds)} />}
           {project.baths > 0 && <Fact icon={<Bath className="h-4 w-4" strokeWidth={1.25} />} label="Bathrooms" value={String(project.baths)} />}
-          <Fact icon={<CalendarClock className="h-4 w-4" strokeWidth={1.25} />} label="Delivery" value={project.delivery} />
-          <Fact icon={<span className="font-display text-lg">₦</span>} label="From" value={project.priceLabel} />
+          <Fact icon={<MapPin className="h-4 w-4" strokeWidth={1.25} />} label="Location" value={project.city} />
         </div>
       </section>
 
@@ -120,6 +119,13 @@ function ProjectDetail() {
               <p className="font-display text-2xl md:text-[2rem] leading-[1.3] tracking-[-0.01em] text-ink max-w-2xl">
                 {project.description}
               </p>
+              {!showSpecs && (
+                <p className="mt-6 text-[14px] leading-relaxed text-ink/60 max-w-2xl">
+                  This project is currently in {project.phaseLabel ?? "planning"}. Pricing and
+                  timelines depend on approvals and subscriber commitments, so we quote current
+                  terms per enquiry — please reach out on WhatsApp for the latest.
+                </p>
+              )}
             </div>
 
             {/* Amenities */}
@@ -134,38 +140,8 @@ function ProjectDetail() {
               </div>
             </div>
 
-            {/* Payment plans */}
-            <div>
-              <div className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">Payment plans</div>
-              <div className="border-t border-ink/10">
-                {project.paymentPlans.map((p) => (
-                  <div key={p.name} className="grid grid-cols-12 gap-4 py-5 border-b border-ink/10 items-baseline">
-                    <div className="col-span-12 md:col-span-3 font-display text-xl text-ink">{p.name}</div>
-                    <div className="col-span-4 md:col-span-3 text-[13px] text-ink/60">{p.term}</div>
-                    <div className="col-span-4 md:col-span-3 text-[13px] text-ink/60">{p.note}</div>
-                    <div className="col-span-4 md:col-span-3 md:text-right text-[13px] text-gilt tracking-wide">{p.discount}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Units */}
-            <div>
-              <div className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">Available units</div>
-              <div className="border-t border-ink/10">
-                {project.units.map((u) => (
-                  <div key={u.name} className="grid grid-cols-12 gap-4 py-5 border-b border-ink/10 items-center">
-                    <div className="col-span-6 md:col-span-3 font-display text-xl text-ink">{u.name}</div>
-                    <div className="col-span-6 md:col-span-3 text-[13px] text-ink/60">{u.type}</div>
-                    <div className="col-span-4 md:col-span-2 text-[13px] text-ink/60">{u.size}</div>
-                    <div className="col-span-4 md:col-span-2 text-[13px] text-ink">{u.price}</div>
-                    <div className="col-span-4 md:col-span-2 md:text-right">
-                      <UnitStatus status={u.status} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Payment plan block (static, sitewide copy) */}
+            <PaymentPlanBlock />
 
             {/* Gallery */}
             <div>
@@ -233,20 +209,25 @@ function ProjectDetail() {
             <div className="md:sticky md:top-28 space-y-6">
               <div className="bg-ink text-ivory p-8">
                 <div className="text-[10px] tracking-[0.3em] uppercase text-gilt mb-4">
-                  Private inspection
+                  Speak with us
                 </div>
                 <div className="font-display text-[2rem] leading-[1.1] mb-4">
-                  Walk the site with a Motiva specialist.
+                  Enquire about {project.name}.
                 </div>
                 <p className="text-ivory/70 text-[14px] mb-6">
-                  Weekday appointments and Saturday guided tours. Diaspora buyers can request a live-video walkthrough.
+                  Pricing and timelines move with approvals — we'll share current terms directly, no obligation.
                 </p>
+                <WhatsAppCta
+                  text={projectWhatsAppText(project.name)}
+                  label="Enquire on WhatsApp"
+                  variant="primary"
+                />
                 <Link
                   to="/contact"
-                  search={{ intent: "inspection", project: project.slug }}
-                  className="inline-flex items-center justify-between gap-6 w-full bg-gilt text-ink px-5 py-3 rounded-full text-[13px] tracking-wide hover:bg-gilt/90 transition-colors"
+                  search={{ intent: "enquiry", project: project.slug }}
+                  className="mt-3 inline-flex items-center justify-between gap-6 w-full border border-ivory/30 text-ivory px-5 py-3 rounded-full text-[13px] tracking-wide hover:border-ivory transition-colors"
                 >
-                  <span>Book an inspection</span>
+                  <span>Send an enquiry</span>
                   <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
                 </Link>
                 <button
@@ -254,19 +235,18 @@ function ProjectDetail() {
                   onClick={() => setSubscribeOpen(true)}
                   className="mt-3 inline-flex items-center justify-between gap-6 w-full border border-ivory/30 text-ivory px-5 py-3 rounded-full text-[13px] tracking-wide hover:border-ivory transition-colors"
                 >
-                  <span>Reserve Your Spot</span>
+                  <span>Reserve your spot</span>
                   <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
                 </button>
               </div>
 
               <div className="bg-mist p-8">
-                <div className="text-[10px] tracking-[0.3em] uppercase text-ink/50 mb-4">Your specialist</div>
-                <div className="font-display text-2xl text-ink">Adaeze Okafor</div>
-                <div className="text-[13px] text-ink/60 mt-1">Head of Sales, Lagos</div>
+                <div className="text-[10px] tracking-[0.3em] uppercase text-ink/50 mb-4">Direct lines</div>
+                <div className="font-display text-2xl text-ink">Motiva Estate Co.</div>
+                <div className="text-[13px] text-ink/60 mt-1">Lagos · Abuja</div>
                 <div className="mt-4 flex flex-col gap-2 text-[13px] text-ink/70">
-                  <a href="tel:+2348000000000" className="hover:text-ink">+234 (0) 800 000 0000</a>
-                  <a href="mailto:adaeze@motiva.ng" className="hover:text-ink">adaeze@motiva.ng</a>
-                  <a href="https://wa.me/2348000000000" className="hover:text-ink">WhatsApp</a>
+                  <a href="tel:+2348153242398" className="hover:text-ink">+234 815 324 2398</a>
+                  <a href="mailto:askme@motivaestate.com" className="hover:text-ink">askme@motivaestate.com</a>
                 </div>
               </div>
             </div>
@@ -281,25 +261,11 @@ function ProjectDetail() {
 function Fact({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-4">
-      <div className="h-10 w-10 rounded-full bg-mist flex items-center justify-center text-ink">{icon}</div>
+      <div className="h-10 w-10 rounded-full bg-mist flex items-center justify-center text-ink shrink-0">{icon}</div>
       <div>
         <div className="text-[10px] tracking-[0.3em] uppercase text-ink/50">{label}</div>
         <div className="text-[15px] text-ink font-medium">{value}</div>
       </div>
     </div>
-  );
-}
-
-function UnitStatus({ status }: { status: "Available" | "Reserved" | "Sold" }) {
-  const cls =
-    status === "Available"
-      ? "bg-gilt/25 text-ink"
-      : status === "Reserved"
-        ? "bg-ink/10 text-ink/60"
-        : "bg-ink/70 text-ivory/90";
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] tracking-[0.25em] uppercase ${cls}`}>
-      {status}
-    </span>
   );
 }
