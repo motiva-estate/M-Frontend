@@ -35,6 +35,16 @@ const guarantees = [
   "An extended life-span for the building and its appurtenances.",
 ];
 
+const qualityAssurance = [
+  "Strict principles adopted across every building development and preventive-maintenance engagement.",
+  "Attention to detail at every stage — design, delivery and after-care.",
+  "Response to client requests within hours, not days.",
+  "Employment and continuous training of competent, motivated professionals.",
+  "Use of the best available equipment, materials and building systems.",
+  "Performance monitored through structured client feedback.",
+  "Adherence to clearly written Service Level Agreements on every engagement.",
+];
+
 const clientele = [
   "Linear Insurance Brokers Ltd",
   "The Nigerian Red Cross",
@@ -128,6 +138,29 @@ function About() {
                 <li key={i} className="flex gap-6 py-5 border-b border-ivory/15">
                   <span className="font-display text-[11px] tracking-[0.3em] uppercase text-gilt shrink-0 w-10 pt-1">0{i + 1}</span>
                   <span className="text-[15px] text-ivory/85 leading-relaxed">{g}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Quality Assurance */}
+        <section className="py-24 md:py-32">
+          <div className="mx-auto max-w-[1500px] px-6 md:px-10 grid md:grid-cols-12 gap-10">
+            <div className="md:col-span-4">
+              <div className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">Quality assurance</div>
+              <h2 className="font-display text-[2.25rem] md:text-[3rem] leading-[1.05] text-ink">
+                A discipline, not a promise.
+              </h2>
+              <p className="mt-6 text-[14px] text-ink/70 max-w-sm leading-relaxed">
+                Seven commitments we hold ourselves to on every engagement — from the first site visit to long-term facilities care.
+              </p>
+            </div>
+            <ul className="md:col-span-8 border-t border-ink/15">
+              {qualityAssurance.map((q, i) => (
+                <li key={i} className="flex gap-6 py-5 border-b border-ink/10">
+                  <span className="font-display text-[11px] tracking-[0.3em] uppercase text-gilt shrink-0 w-10 pt-1">Q{i + 1}</span>
+                  <span className="text-[15px] text-ink/85 leading-relaxed">{q}</span>
                 </li>
               ))}
             </ul>
