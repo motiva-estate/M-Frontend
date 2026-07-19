@@ -35,6 +35,16 @@ const guarantees = [
   "An extended life-span for the building and its appurtenances.",
 ];
 
+const qualityAssurance = [
+  "Strict principles adopted across every building development and preventive-maintenance engagement.",
+  "Attention to detail at every stage — design, delivery and after-care.",
+  "Response to client requests within hours, not days.",
+  "Employment and continuous training of competent, motivated professionals.",
+  "Use of the best available equipment, materials and building systems.",
+  "Performance monitored through structured client feedback.",
+  "Adherence to clearly written Service Level Agreements on every engagement.",
+];
+
 const clientele = [
   "Linear Insurance Brokers Ltd",
   "The Nigerian Red Cross",
