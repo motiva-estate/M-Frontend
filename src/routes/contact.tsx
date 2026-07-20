@@ -150,7 +150,13 @@ function ContactPage() {
   );
 }
 
+function useProjects(): SanityProject[] {
+  const { data } = useQuery(projectsQueryOptions);
+  return data ?? [];
+}
+
 function EnquiryForm({ defaultProject }: { defaultProject: string }) {
+  const projects = useProjects();
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
