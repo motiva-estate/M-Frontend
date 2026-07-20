@@ -2,11 +2,15 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useMemo } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Search } from "lucide-react";
-import { projects, cities, propertyTypes, statuses, type Project, type ProjectStatus } from "@/data/projects";
 import { PageHeader } from "@/components/motiva/PageHeader";
 import { StatusBadge } from "@/components/motiva/StatusBadge";
 import { WhatsAppCta, projectWhatsAppText } from "@/components/motiva/WhatsAppCta";
+import { projectsQueryOptions } from "@/lib/sanity/queries";
+import { resolveImage } from "@/lib/sanity/image";
+import { projectCover } from "@/lib/sanity/fallbacks";
+import type { SanityProject } from "@/lib/sanity/types";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -17,6 +21,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/projects/")({
   validateSearch: zodValidator(searchSchema),
+  loader: ({ context }) => context.queryClient.ensureQueryData(projectsQueryOptions),
   head: () => ({
     meta: [
       { title: "Residences — Motiva Real Estate" },
@@ -32,15 +37,38 @@ export const Route = createFileRoute("/projects/")({
       },
     ],
   }),
+  errorComponent: ({ error }) => (
+    <div className="min-h-screen flex items-center justify-center bg-ivory text-ink px-6">
+      <div className="text-center max-w-md">
+        <div className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">Unable to load</div>
+        <h1 className="font-display text-4xl mb-4">Residences didn't load.</h1>
+        <p className="text-ink/60">{error.message}</p>
+      </div>
+    </div>
+  ),
+  notFoundComponent: () => <div>No residences found.</div>,
   component: ProjectsIndex,
 });
 
 function ProjectsIndex() {
+  const { data: projects } = useSuspenseQuery(projectsQueryOptions);
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/projects" });
 
   const update = (patch: Partial<typeof search>) =>
     navigate({ search: (prev: typeof search) => ({ ...prev, ...patch }) });
+
+  const cities = useMemo(
+    () => Array.from(new Set(projects.map((p) => p.city).filter((c): c is string => Boolean(c)))),
+    [projects],
+  );
+  const propertyTypes = useMemo(
+    () =>
+      Array.from(
+        new Set(projects.map((p) => p.propertyType).filter((t): t is NonNullable<typeof t> => Boolean(t))),
+      ),
+    [projects],
+  );
 
   const filtered = useMemo(() => {
     return projects.filter((p) => {
@@ -50,16 +78,16 @@ function ProjectsIndex() {
       if (search.q.trim()) {
         const q = search.q.toLowerCase();
         if (
-          !p.name.toLowerCase().includes(q) &&
-          !p.location.toLowerCase().includes(q) &&
-          !p.tagline.toLowerCase().includes(q) &&
-          !p.buildingType.toLowerCase().includes(q)
+          !p.title.toLowerCase().includes(q) &&
+          !(p.location ?? "").toLowerCase().includes(q) &&
+          !(p.tagline ?? "").toLowerCase().includes(q) &&
+          !(p.buildingType ?? "").toLowerCase().includes(q)
         )
           return false;
       }
       return true;
     });
-  }, [search]);
+  }, [projects, search]);
 
   return (
     <>
@@ -70,7 +98,7 @@ function ProjectsIndex() {
             Residences currently<br />in pre-sale.
           </>
         }
-        intro="A small, honest set of six residences in review and planning across Abuja. Pricing and delivery timelines move with approvals — we quote current terms per enquiry."
+        intro="A small, honest set of residences in review and planning across Abuja. Pricing and delivery timelines move with approvals — we quote current terms per enquiry."
         crumbs={[{ label: "Motiva", to: "/" }, { label: "Residences" }]}
         right={
           <div className="text-right">
@@ -84,20 +112,16 @@ function ProjectsIndex() {
         }
       />
 
-      {/* Filter shelf */}
       <div className="sticky top-16 md:top-20 z-30 bg-ivory/95 backdrop-blur-xl border-b border-ink/10">
         <div className="mx-auto max-w-[1500px] px-6 md:px-10 py-4">
           <div className="flex flex-wrap items-center gap-3">
-            {/* Status segmented */}
             <div className="inline-flex rounded-full border border-ink/15 p-1 bg-ivory">
-              {(["all", ...statuses] as const).map((s) => (
+              {(["all", "pre-sale", "ongoing", "delivered"] as const).map((s) => (
                 <button
                   key={s}
                   onClick={() => update({ status: s })}
                   className={`px-4 py-1.5 text-[12px] tracking-wide rounded-full transition-colors capitalize ${
-                    search.status === s
-                      ? "bg-ink text-ivory"
-                      : "text-ink/70 hover:text-ink"
+                    search.status === s ? "bg-ink text-ivory" : "text-ink/70 hover:text-ink"
                   }`}
                 >
                   {s === "all" ? "All" : s === "pre-sale" ? "Pre-sale" : s === "ongoing" ? "Ongoing" : "Delivered"}
@@ -132,7 +156,6 @@ function ProjectsIndex() {
         </div>
       </div>
 
-      {/* Grid */}
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-[1500px] px-6 md:px-10">
           {filtered.length === 0 ? (
@@ -140,7 +163,7 @@ function ProjectsIndex() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-14">
               {filtered.map((p, i) => (
-                <ProjectCard key={p.slug} project={p} index={i} />
+                <ProjectCard key={p._id} project={p} index={i} />
               ))}
             </div>
           )}
@@ -150,19 +173,20 @@ function ProjectsIndex() {
   );
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index }: { project: SanityProject; index: number }) {
   const isWide = index % 5 === 0;
   const stagger = !isWide && index % 3 === 2 ? "md:mt-16" : "";
   const cols = isWide ? "md:col-span-8" : "md:col-span-4";
   const aspect = isWide ? "aspect-[16/10]" : "aspect-[4/5]";
+  const cover = projectCover(project.slug, resolveImage(project.cover, { width: 1400 }) ?? project.coverUrl);
 
   return (
     <div className={`group ${cols} ${stagger}`}>
       <Link to="/projects/$slug" params={{ slug: project.slug }} className="block">
         <div className={`relative overflow-hidden bg-ink ${aspect}`}>
           <img
-            src={project.cover}
-            alt={project.name}
+            src={cover}
+            alt={project.title}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
           />
@@ -175,12 +199,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div className="mt-6 flex items-start justify-between gap-6">
           <div>
             <div className="text-[10px] tracking-[0.35em] uppercase text-ink/50 mb-3">
-              {project.location} · {project.propertyType}
+              {project.location}
+              {project.propertyType ? ` · ${project.propertyType}` : ""}
             </div>
             <h3 className="font-display text-2xl md:text-[1.75rem] text-ink leading-tight">
-              {project.name}
+              {project.title}
             </h3>
-            <div className="mt-2 text-[13px] text-ink/60">{project.buildingType}</div>
+            {project.buildingType && (
+              <div className="mt-2 text-[13px] text-ink/60">{project.buildingType}</div>
+            )}
           </div>
           <ArrowUpRight
             className="h-5 w-5 text-ink/50 group-hover:text-ink transition-colors shrink-0 mt-1"
@@ -190,7 +217,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </Link>
       <div className="mt-4">
         <WhatsAppCta
-          text={projectWhatsAppText(project.name)}
+          text={projectWhatsAppText(project.title)}
           label="Enquire on WhatsApp"
           variant="outline"
         />
@@ -257,6 +284,3 @@ function EmptyState({ onReset }: { onReset: () => void }) {
     </div>
   );
 }
-
-// Keep unused type-only helper reference for future ongoing/delivered filtering.
-export type { ProjectStatus };

@@ -1,5 +1,4 @@
-import type { ProjectStatus } from "@/data/projects";
-import type { LandStatus } from "@/data/land";
+import type { LandStatus, ProjectStatus } from "@/lib/sanity/types";
 
 export function StatusBadge({
   status,

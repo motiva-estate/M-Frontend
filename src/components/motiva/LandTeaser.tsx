@@ -1,13 +1,18 @@
 import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useSectionReveal } from "@/hooks/use-section-reveal";
-import { landParcels } from "@/data/land";
 import { LandStatusBadge } from "@/components/motiva/StatusBadge";
+import { landQueryOptions } from "@/lib/sanity/queries";
+import { resolveImage } from "@/lib/sanity/image";
+import { landCover } from "@/lib/sanity/fallbacks";
 
 export function LandTeaser() {
   const ref = useRef<HTMLElement>(null);
   useSectionReveal(ref);
+  const { data } = useQuery(landQueryOptions);
+  const parcels = data ?? [];
 
   return (
     <section ref={ref} className="relative py-28 md:py-40 bg-ivory">
@@ -35,41 +40,46 @@ export function LandTeaser() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {landParcels.map((l) => (
-            <Link
-              data-reveal
-              key={l.slug}
-              to="/land/$slug"
-              params={{ slug: l.slug }}
-              className="group block"
-            >
-              <div className="relative aspect-[16/11] overflow-hidden bg-ink">
-                <img
-                  src={l.cover}
-                  alt={l.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
-                />
-                <div className="absolute top-4 left-4">
-                  <LandStatusBadge status={l.status} />
-                </div>
-              </div>
-              <div className="mt-6 flex items-start justify-between gap-6">
-                <div>
-                  <div className="text-[10px] tracking-[0.35em] uppercase text-ink/50 mb-3">
-                    {l.location}
-                  </div>
-                  <h3 className="font-display text-2xl md:text-[1.75rem] text-ink leading-tight">
-                    {l.name}
-                  </h3>
-                  <div className="mt-2 text-[13px] text-ink/60">
-                    {l.sizes.join(" · ")} SQM
+          {parcels.map((l) => {
+            const cover = landCover(l.slug, resolveImage(l.cover, { width: 1200 }) ?? l.coverUrl);
+            return (
+              <Link
+                data-reveal
+                key={l._id}
+                to="/land/$slug"
+                params={{ slug: l.slug }}
+                className="group block"
+              >
+                <div className="relative aspect-[16/11] overflow-hidden bg-ink">
+                  <img
+                    src={cover}
+                    alt={l.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <LandStatusBadge status={l.status} />
                   </div>
                 </div>
-                <ArrowUpRight className="h-5 w-5 text-ink/50 group-hover:text-ink transition-colors shrink-0 mt-1" strokeWidth={1.25} />
-              </div>
-            </Link>
-          ))}
+                <div className="mt-6 flex items-start justify-between gap-6">
+                  <div>
+                    <div className="text-[10px] tracking-[0.35em] uppercase text-ink/50 mb-3">
+                      {l.location}
+                    </div>
+                    <h3 className="font-display text-2xl md:text-[1.75rem] text-ink leading-tight">
+                      {l.name}
+                    </h3>
+                    {l.sizes && l.sizes.length > 0 && (
+                      <div className="mt-2 text-[13px] text-ink/60">
+                        {l.sizes.join(" · ")} SQM
+                      </div>
+                    )}
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 text-ink/50 group-hover:text-ink transition-colors shrink-0 mt-1" strokeWidth={1.25} />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

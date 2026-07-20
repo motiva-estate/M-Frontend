@@ -1,14 +1,18 @@
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useSectionReveal } from "@/hooks/use-section-reveal";
-import { projects } from "@/data/projects";
 import { StatusBadge } from "@/components/motiva/StatusBadge";
+import { featuredProjectsQueryOptions } from "@/lib/sanity/queries";
+import { resolveImage } from "@/lib/sanity/image";
+import { projectCover } from "@/lib/sanity/fallbacks";
 
 export function Residences() {
   const ref = useRef<HTMLElement>(null);
   useSectionReveal(ref);
-  const featured = projects.filter((p) => p.featured).slice(0, 3);
+  const { data } = useQuery(featuredProjectsQueryOptions);
+  const featured = (data ?? []).slice(0, 3);
 
   return (
     <section ref={ref} id="residences" className="relative py-28 md:py-40 bg-mist">
@@ -36,42 +40,47 @@ export function Residences() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-x-8 gap-y-16">
-          {featured.map((p, i) => (
-            <Link
-              data-reveal
-              key={p.slug}
-              to="/projects/$slug"
-              params={{ slug: p.slug }}
-              className={`group block ${i === 1 ? "md:mt-16" : ""}`}
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-ink">
-                <img
-                  src={p.cover}
-                  alt={p.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
-                />
-                <div className="absolute top-4 left-4">
-                  <StatusBadge status={p.projectStatus} phaseLabel={p.phaseLabel} />
-                </div>
-              </div>
-              <div className="mt-6 flex items-start justify-between gap-6">
-                <div>
-                  <div className="text-[10px] tracking-[0.35em] uppercase text-ink/50 mb-3">
-                    {p.location}
+          {featured.map((p, i) => {
+            const cover = projectCover(p.slug, resolveImage(p.cover, { width: 1200 }) ?? p.coverUrl);
+            return (
+              <Link
+                data-reveal
+                key={p._id}
+                to="/projects/$slug"
+                params={{ slug: p.slug }}
+                className={`group block ${i === 1 ? "md:mt-16" : ""}`}
+              >
+                <div className="relative aspect-[4/5] overflow-hidden bg-ink">
+                  <img
+                    src={cover}
+                    alt={p.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <StatusBadge status={p.projectStatus} phaseLabel={p.phaseLabel} />
                   </div>
-                  <h3 className="font-display text-2xl md:text-[1.75rem] text-ink leading-tight">
-                    {p.name}
-                  </h3>
-                  <div className="mt-2 text-[13px] text-ink/60">{p.buildingType}</div>
                 </div>
-                <ArrowUpRight
-                  className="h-5 w-5 text-ink/50 group-hover:text-ink transition-colors shrink-0 mt-1"
-                  strokeWidth={1.25}
-                />
-              </div>
-            </Link>
-          ))}
+                <div className="mt-6 flex items-start justify-between gap-6">
+                  <div>
+                    <div className="text-[10px] tracking-[0.35em] uppercase text-ink/50 mb-3">
+                      {p.location}
+                    </div>
+                    <h3 className="font-display text-2xl md:text-[1.75rem] text-ink leading-tight">
+                      {p.title}
+                    </h3>
+                    {p.buildingType && (
+                      <div className="mt-2 text-[13px] text-ink/60">{p.buildingType}</div>
+                    )}
+                  </div>
+                  <ArrowUpRight
+                    className="h-5 w-5 text-ink/50 group-hover:text-ink transition-colors shrink-0 mt-1"
+                    strokeWidth={1.25}
+                  />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

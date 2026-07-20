@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { projects } from "@/data/projects";
+import { sanityClient } from "@/lib/sanity/client";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
@@ -15,18 +15,22 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        const [projectSlugs, landSlugs] = await Promise.all([
+          sanityClient.fetch<string[]>(`*[_type == "project" && defined(slug.current)].slug.current`),
+          sanityClient.fetch<string[]>(`*[_type == "land" && defined(slug.current)].slug.current`),
+        ]);
+
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
+          { path: "/services", changefreq: "monthly", priority: "0.7" },
           { path: "/projects", changefreq: "weekly", priority: "0.9" },
+          { path: "/land", changefreq: "weekly", priority: "0.9" },
           { path: "/gallery", changefreq: "monthly", priority: "0.6" },
           { path: "/faq", changefreq: "monthly", priority: "0.5" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
-          ...projects.map((p) => ({
-            path: `/projects/${p.slug}`,
-            changefreq: "weekly" as const,
-            priority: "0.8",
-          })),
+          ...projectSlugs.map((s) => ({ path: `/projects/${s}`, changefreq: "weekly" as const, priority: "0.8" })),
+          ...landSlugs.map((s) => ({ path: `/land/${s}`, changefreq: "weekly" as const, priority: "0.8" })),
         ];
 
         const urls = entries.map((e) =>
