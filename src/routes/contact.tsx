@@ -202,7 +202,7 @@ function EnquiryForm({ defaultProject }: { defaultProject: string }) {
         label="Residence (optional)"
         name="project"
         defaultValue={defaultProject}
-        options={["", ...projects.map((p) => p.name)]}
+        options={["", ...projects.map((p) => p.title)]}
       />
       <div>
         <Label className="text-[11px] tracking-[0.25em] uppercase text-ink/60">Message *</Label>
@@ -220,6 +220,7 @@ function EnquiryForm({ defaultProject }: { defaultProject: string }) {
 }
 
 function InspectionForm({ defaultProject }: { defaultProject: string }) {
+  const projects = useProjects();
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const today = new Date().toISOString().slice(0, 10);
@@ -265,7 +266,7 @@ function InspectionForm({ defaultProject }: { defaultProject: string }) {
           name="project"
           required
           defaultValue={defaultProject}
-          options={projects.map((p) => p.slug === defaultProject ? p.name : p.name)}
+          options={projects.map((p) => p.title)}
         />
         <Field label="Preferred date" name="date" type="date" required min={today} />
         <SelectField
