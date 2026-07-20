@@ -11,7 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { projects } from "@/data/projects";
+import { useQuery } from "@tanstack/react-query";
+import { projectsQueryOptions } from "@/lib/sanity/queries";
+import type { SanityProject } from "@/lib/sanity/types";
 import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
 
 const searchSchema = z.object({
