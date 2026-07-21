@@ -1,6 +1,13 @@
 import { queryOptions } from "@tanstack/react-query";
 import { sanityClient } from "./client";
-import type { SanityContactInfo, SanityLand, SanityProject } from "./types";
+import type {
+  SanityCompanyInfo,
+  SanityContactInfo,
+  SanityGalleryItem,
+  SanityJournalEntry,
+  SanityLand,
+  SanityProject,
+} from "./types";
 
 const PROJECT_PROJECTION = `{
   _id,
@@ -105,6 +112,40 @@ export const contactInfoQueryOptions = queryOptions({
         whatsappNumber,
         offices,
         socialLinks
+      }`,
+    ),
+});
+
+// ─── Company info (singleton) ─────────────────────────────
+
+export const companyInfoQueryOptions = queryOptions({
+  queryKey: ["sanity", "companyInfo"],
+  queryFn: () =>
+    sanityClient.fetch<SanityCompanyInfo | null>(
+      `*[_type == "companyInfo"][0]{ foundingYear, mission, vision, stats }`,
+    ),
+});
+
+// ─── Gallery items ────────────────────────────────────────
+
+export const galleryItemsQueryOptions = queryOptions({
+  queryKey: ["sanity", "galleryItems"],
+  queryFn: () =>
+    sanityClient.fetch<SanityGalleryItem[]>(
+      `*[_type == "galleryItem"] | order(order asc, _createdAt asc){
+        _id, caption, category, order, image, url
+      }`,
+    ),
+});
+
+// ─── Journal entries ──────────────────────────────────────
+
+export const journalEntriesQueryOptions = queryOptions({
+  queryKey: ["sanity", "journalEntries"],
+  queryFn: () =>
+    sanityClient.fetch<SanityJournalEntry[]>(
+      `*[_type == "journalEntry"] | order(order asc, publishedAt desc){
+        _id, title, "slug": slug.current, category, excerpt, publishedAt, readingTime, cover, coverUrl, order
       }`,
     ),
 });
