@@ -50,3 +50,31 @@ export function landGallery(slug: string, resolved: string[]) {
   if (resolved.length > 0) return resolved;
   return landImageFallbacks[slug]?.gallery ?? [PLACEHOLDER];
 }
+
+// ─── Gallery caption → local image ────────────────────────
+export const galleryImageByCaption: Record<string, string> = {
+  "Casa Solano — façade": r1,
+  "Aerie — the great room": g1,
+  "Solano kitchen": g3,
+  "Kestrel Lodge": r2,
+  "Ridge Suite": g4,
+  "Solano table": g6,
+  "Aerie House at dusk": r3,
+  "Mira pavilion": g5,
+  "Kestrel ascent": g2,
+};
+
+export function galleryImage(caption: string | undefined, resolved?: string) {
+  return resolved ?? (caption ? galleryImageByCaption[caption] : undefined) ?? PLACEHOLDER;
+}
+
+// ─── Journal slug → local image ───────────────────────────
+export const journalImageBySlug: Record<string, string> = {
+  "how-a-ridge-decides-a-floor-plan": g4,
+  "why-our-kitchens-begin-with-stone": g3,
+  "the-quiet-return-of-the-staircase": g2,
+};
+
+export function journalImage(slug: string | undefined, resolved?: string) {
+  return resolved ?? (slug ? journalImageBySlug[slug] : undefined) ?? PLACEHOLDER;
+}

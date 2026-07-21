@@ -59,3 +59,38 @@ export interface SanityContactInfo {
   offices?: { label?: string; address?: string; phone?: string }[];
   socialLinks?: { platform?: string; url?: string }[];
 }
+
+export interface SanityCompanyStat {
+  _key?: string;
+  label?: string;
+  value?: string;
+}
+
+export interface SanityCompanyInfo {
+  foundingYear?: number;
+  mission?: string;
+  vision?: string;
+  stats?: SanityCompanyStat[];
+}
+
+export interface SanityGalleryItem {
+  _id: string;
+  caption?: string;
+  category?: string;
+  order?: number;
+  image?: ImageLike;
+  url?: string;
+}
+
+export interface SanityJournalEntry {
+  _id: string;
+  title: string;
+  slug?: string;
+  category?: string;
+  excerpt?: string;
+  publishedAt?: string;
+  readingTime?: string;
+  cover?: ImageLike;
+  coverUrl?: string;
+  order?: number;
+}

@@ -1,37 +1,24 @@
-import g2 from "@/assets/motiva/gallery-2.jpg";
-import g3 from "@/assets/motiva/gallery-3.jpg";
-import g4 from "@/assets/motiva/gallery-4.jpg";
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSectionReveal } from "@/hooks/use-section-reveal";
+import { journalEntriesQueryOptions } from "@/lib/sanity/queries";
+import { resolveImage } from "@/lib/sanity/image";
+import { journalImage } from "@/lib/sanity/fallbacks";
 
-const posts = [
-  {
-    img: g4,
-    tag: "Field notes",
-    date: "March 2026",
-    title: "How a ridge decides a floor plan",
-    read: "6 min",
-  },
-  {
-    img: g3,
-    tag: "Materials",
-    date: "February 2026",
-    title: "Why our kitchens begin with stone",
-    read: "4 min",
-  },
-  {
-    img: g2,
-    tag: "Studio",
-    date: "January 2026",
-    title: "The quiet return of the staircase",
-    read: "8 min",
-  },
-];
+function formatDate(iso?: string) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+}
 
 export function Journal() {
   const ref = useRef<HTMLElement>(null);
   useSectionReveal(ref);
+  const { data: posts } = useSuspenseQuery(journalEntriesQueryOptions);
+
+  if (!posts || posts.length === 0) return null;
 
   return (
     <section ref={ref} id="journal" className="py-28 md:py-40 bg-ivory">
@@ -52,28 +39,32 @@ export function Journal() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-x-8 gap-y-12">
-          {posts.map((p) => (
-            <a data-reveal key={p.title} href="#" className="group block">
-              <div className="aspect-[4/5] overflow-hidden bg-mist mb-6">
-                <img
-                  src={p.img}
-                  alt={p.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
-                />
-              </div>
-              <div className="flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase text-ink/50 mb-4">
-                <span>{p.tag}</span>
-                <span className="h-px w-4 bg-ink/20" />
-                <span>{p.date}</span>
-                <span className="h-px w-4 bg-ink/20" />
-                <span>{p.read}</span>
-              </div>
-              <h3 className="font-display text-xl md:text-[1.5rem] leading-snug text-ink group-hover:text-ink/70 transition-colors">
-                {p.title}
-              </h3>
-            </a>
-          ))}
+          {posts.slice(0, 3).map((p) => {
+            const src = journalImage(p.slug, resolveImage(p.cover) ?? p.coverUrl);
+            const date = formatDate(p.publishedAt);
+            return (
+              <a data-reveal key={p._id} href="#" className="group block">
+                <div className="aspect-[4/5] overflow-hidden bg-mist mb-6">
+                  <img
+                    src={src}
+                    alt={p.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                </div>
+                <div className="flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase text-ink/50 mb-4">
+                  {p.category && <span>{p.category}</span>}
+                  {p.category && date && <span className="h-px w-4 bg-ink/20" />}
+                  {date && <span>{date}</span>}
+                  {p.readingTime && <span className="h-px w-4 bg-ink/20" />}
+                  {p.readingTime && <span>{p.readingTime}</span>}
+                </div>
+                <h3 className="font-display text-xl md:text-[1.5rem] leading-snug text-ink group-hover:text-ink/70 transition-colors">
+                  {p.title}
+                </h3>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>

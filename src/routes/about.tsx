@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Nav } from "@/components/motiva/Nav";
 import { Footer } from "@/components/motiva/Footer";
 import { WhatsAppBubble } from "@/components/motiva/WhatsAppBubble";
@@ -6,6 +7,7 @@ import { PageHeader } from "@/components/motiva/PageHeader";
 import { ArrowUpRight } from "lucide-react";
 import about1 from "@/assets/motiva/about-1.jpg";
 import about2 from "@/assets/motiva/about-2.jpg";
+import { companyInfoQueryOptions } from "@/lib/sanity/queries";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -16,6 +18,7 @@ export const Route = createFileRoute("/about")({
       { property: "og:description", content: "Fully integrated real-estate solutions for private, corporate and public-sector clients since 2010." },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(companyInfoQueryOptions),
   component: About,
 });
 
@@ -58,6 +61,13 @@ const clientele = [
 ];
 
 function About() {
+  const { data: company } = useSuspenseQuery(companyInfoQueryOptions);
+  const missionText = company?.mission ??
+    "To provide the best fully integrated real-estate solutions in line with the utmost interest of our clients — with human capital and modern technology working seamlessly, so every client receives value.";
+  const visionText = company?.vision ??
+    "To be a foremost player in the real-estate industry, noted for unmatched quality of service delivery to our clients.";
+  const stats = company?.stats ?? [];
+
   return (
     <div className="bg-ivory text-ink min-h-screen flex flex-col">
       <Nav />
@@ -68,6 +78,7 @@ function About() {
           intro="Motiva Estate Company (MEC) is a limited liability company founded in 2010 by a team of experienced built-environment professionals. With offices in Lagos and Abuja, we deliver fully integrated real-estate solutions to private, corporate and public-sector clients."
           crumbs={[{ label: "Motiva", to: "/" }, { label: "Practice" }]}
         />
+
 
         {/* Manifesto */}
         <section className="py-24 md:py-32">
@@ -93,17 +104,28 @@ function About() {
             <div className="md:col-span-6 border-t border-ink/15 pt-8">
               <div className="text-[10px] tracking-[0.3em] uppercase text-gilt mb-4">Mission</div>
               <p className="font-display text-[1.5rem] md:text-[2rem] leading-[1.25] text-ink">
-                To provide the best fully integrated real-estate solutions in line with the utmost interest of our clients — with human capital and modern technology working seamlessly, so every client receives value.
+                {missionText}
               </p>
             </div>
             <div className="md:col-span-6 border-t border-ink/15 pt-8">
               <div className="text-[10px] tracking-[0.3em] uppercase text-gilt mb-4">Vision</div>
               <p className="font-display text-[1.5rem] md:text-[2rem] leading-[1.25] text-ink">
-                To be a foremost player in the real-estate industry, noted for unmatched quality of service delivery to our clients.
+                {visionText}
               </p>
             </div>
+            {stats.length > 0 && (
+              <div className="md:col-span-12 mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-ink/15 pt-10">
+                {stats.map((s, i) => (
+                  <div key={s._key ?? i}>
+                    <div className="text-[10px] tracking-[0.3em] uppercase text-ink/50 mb-2">{s.label}</div>
+                    <div className="font-display text-[1.5rem] md:text-[1.85rem] text-ink leading-tight">{s.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
+
 
         {/* Core ideology */}
         <section className="py-24 md:py-32">
