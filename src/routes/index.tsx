@@ -12,8 +12,10 @@ import { Journal } from "@/components/motiva/Journal";
 import { ContactCTA } from "@/components/motiva/ContactCTA";
 import { Footer } from "@/components/motiva/Footer";
 import { WhatsAppBubble } from "@/components/motiva/WhatsAppBubble";
+import { journalEntriesQueryOptions } from "@/lib/sanity/queries";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(journalEntriesQueryOptions),
   component: Index,
 });
 
