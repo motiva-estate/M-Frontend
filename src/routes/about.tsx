@@ -104,17 +104,28 @@ function About() {
             <div className="md:col-span-6 border-t border-ink/15 pt-8">
               <div className="text-[10px] tracking-[0.3em] uppercase text-gilt mb-4">Mission</div>
               <p className="font-display text-[1.5rem] md:text-[2rem] leading-[1.25] text-ink">
-                To provide the best fully integrated real-estate solutions in line with the utmost interest of our clients — with human capital and modern technology working seamlessly, so every client receives value.
+                {missionText}
               </p>
             </div>
             <div className="md:col-span-6 border-t border-ink/15 pt-8">
               <div className="text-[10px] tracking-[0.3em] uppercase text-gilt mb-4">Vision</div>
               <p className="font-display text-[1.5rem] md:text-[2rem] leading-[1.25] text-ink">
-                To be a foremost player in the real-estate industry, noted for unmatched quality of service delivery to our clients.
+                {visionText}
               </p>
             </div>
+            {stats.length > 0 && (
+              <div className="md:col-span-12 mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-ink/15 pt-10">
+                {stats.map((s, i) => (
+                  <div key={s._key ?? i}>
+                    <div className="text-[10px] tracking-[0.3em] uppercase text-ink/50 mb-2">{s.label}</div>
+                    <div className="font-display text-[1.5rem] md:text-[1.85rem] text-ink leading-tight">{s.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
+
 
         {/* Core ideology */}
         <section className="py-24 md:py-32">
