@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { galleryItemsQueryOptions } from "@/lib/sanity/queries";
 import { resolveImage } from "@/lib/sanity/image";
 import { galleryImage } from "@/lib/sanity/fallbacks";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -36,6 +37,7 @@ const SPANS = [
 ];
 
 function GalleryPage() {
+  usePageReveal();
   const { data: items } = useSuspenseQuery(galleryItemsQueryOptions);
   const cats = useMemo(() => {
     const set = new Set<string>();

@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { projectsQueryOptions } from "@/lib/sanity/queries";
 import type { SanityProject } from "@/lib/sanity/types";
 import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 const searchSchema = z.object({
   intent: fallback(z.enum(["enquiry", "inspection"]), "enquiry").default("enquiry"),
@@ -63,6 +64,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
+  usePageReveal();
   const { intent, project } = Route.useSearch();
   const [tab, setTab] = useState<string>(intent);
 
