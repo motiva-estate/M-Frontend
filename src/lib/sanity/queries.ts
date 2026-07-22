@@ -150,3 +150,15 @@ export const journalEntriesQueryOptions = queryOptions({
       }`,
     ),
 });
+
+// ─── Services ─────────────────────────────────────────────
+
+export const servicesQueryOptions = queryOptions({
+  queryKey: ["sanity", "services"],
+  queryFn: () =>
+    sanityClient.fetch<SanityService[]>(
+      `*[_type == "service"] | order(order asc, number asc){
+        _id, number, title, "slug": slug.current, lede, body, items, icon, order
+      }`,
+    ),
+});
