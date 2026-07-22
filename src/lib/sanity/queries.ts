@@ -7,6 +7,7 @@ import type {
   SanityJournalEntry,
   SanityLand,
   SanityProject,
+  SanityService,
 } from "./types";
 
 const PROJECT_PROJECTION = `{
