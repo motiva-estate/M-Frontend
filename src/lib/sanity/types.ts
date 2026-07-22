@@ -94,3 +94,15 @@ export interface SanityJournalEntry {
   coverUrl?: string;
   order?: number;
 }
+
+export interface SanityService {
+  _id: string;
+  number?: string;
+  title: string;
+  slug?: string;
+  lede?: string;
+  body?: string;
+  items?: string[];
+  icon?: string;
+  order?: number;
+}
