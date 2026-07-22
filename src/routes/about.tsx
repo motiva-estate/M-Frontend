@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import about1 from "@/assets/motiva/about-1.jpg";
 import about2 from "@/assets/motiva/about-2.jpg";
 import { companyInfoQueryOptions } from "@/lib/sanity/queries";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -61,6 +62,7 @@ const clientele = [
 ];
 
 function About() {
+  usePageReveal();
   const { data: company } = useSuspenseQuery(companyInfoQueryOptions);
   const missionText = company?.mission ??
     "To provide the best fully integrated real-estate solutions in line with the utmost interest of our clients — with human capital and modern technology working seamlessly, so every client receives value.";

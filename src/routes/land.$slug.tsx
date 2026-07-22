@@ -8,6 +8,7 @@ import { ArrowUpRight, MapPin, Ruler, Check } from "lucide-react";
 import { landBySlugQueryOptions } from "@/lib/sanity/queries";
 import { resolveImage } from "@/lib/sanity/image";
 import { landCover, landGallery } from "@/lib/sanity/fallbacks";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/land/$slug")({
   loader: async ({ params, context }) => {
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/land/$slug")({
 });
 
 function LandDetail() {
+  usePageReveal();
   const { slug } = Route.useParams();
   const { data: parcelData } = useSuspenseQuery(landBySlugQueryOptions(slug));
   const parcel = parcelData!;

@@ -4,6 +4,7 @@ import { Footer } from "@/components/motiva/Footer";
 import { WhatsAppBubble } from "@/components/motiva/WhatsAppBubble";
 import { PageHeader } from "@/components/motiva/PageHeader";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -67,6 +68,7 @@ const groups: { title: string; items: { q: string; a: string }[] }[] = [
 ];
 
 function FAQPage() {
+  usePageReveal();
   return (
     <div className="bg-ivory text-ink min-h-screen flex flex-col">
       <Nav />

@@ -11,6 +11,7 @@ import { projectsQueryOptions } from "@/lib/sanity/queries";
 import { resolveImage } from "@/lib/sanity/image";
 import { projectCover } from "@/lib/sanity/fallbacks";
 import type { SanityProject } from "@/lib/sanity/types";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/projects/")({
 });
 
 function ProjectsIndex() {
+  usePageReveal();
   const { data: projects } = useSuspenseQuery(projectsQueryOptions);
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/projects" });

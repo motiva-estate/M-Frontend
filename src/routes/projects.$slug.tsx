@@ -10,6 +10,7 @@ import { WhatsAppCta, projectWhatsAppText } from "@/components/motiva/WhatsAppCt
 import { projectBySlugQueryOptions } from "@/lib/sanity/queries";
 import { resolveImage } from "@/lib/sanity/image";
 import { projectCover, projectGallery } from "@/lib/sanity/fallbacks";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/projects/$slug")({
   loader: async ({ params, context }) => {
@@ -78,6 +79,7 @@ export const Route = createFileRoute("/projects/$slug")({
 });
 
 function ProjectDetail() {
+  usePageReveal();
   const { slug } = Route.useParams();
   const { data: projectData } = useSuspenseQuery(projectBySlugQueryOptions(slug));
   const project = projectData!;

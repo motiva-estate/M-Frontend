@@ -11,6 +11,7 @@ import { landQueryOptions } from "@/lib/sanity/queries";
 import { resolveImage } from "@/lib/sanity/image";
 import { landCover } from "@/lib/sanity/fallbacks";
 import type { SanityLand } from "@/lib/sanity/types";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/land")({
   loader: ({ context }) => context.queryClient.ensureQueryData(landQueryOptions),
@@ -56,6 +57,7 @@ function LandLayout() {
 }
 
 export function LandListing() {
+  usePageReveal();
   const { data: parcels } = useSuspenseQuery(landQueryOptions);
   return (
     <>

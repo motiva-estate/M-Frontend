@@ -6,6 +6,7 @@ import { WhatsAppBubble } from "@/components/motiva/WhatsAppBubble";
 import { PageHeader } from "@/components/motiva/PageHeader";
 import { ArrowUpRight } from "lucide-react";
 import { servicesQueryOptions } from "@/lib/sanity/queries";
+import { usePageReveal } from "@/hooks/use-page-reveal";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/services")({
 });
 
 function ServicesPage() {
+  usePageReveal();
   const { data: services } = useSuspenseQuery(servicesQueryOptions);
 
   return (
