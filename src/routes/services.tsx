@@ -38,9 +38,9 @@ function ServicesPage() {
           <div className="mx-auto max-w-[1500px] px-6 md:px-10">
             <div className="border-t border-ink/15">
               {services.map((s) => (
-                <article key={s.n} className="grid md:grid-cols-12 gap-8 md:gap-16 py-14 md:py-20 border-b border-ink/15">
+                <article key={s._id} className="grid md:grid-cols-12 gap-8 md:gap-16 py-14 md:py-20 border-b border-ink/15">
                   <div className="md:col-span-4">
-                    <div className="text-[11px] tracking-[0.35em] uppercase text-gilt mb-6">{s.n}</div>
+                    <div className="text-[11px] tracking-[0.35em] uppercase text-gilt mb-6">{s.number}</div>
                     <h2 className="font-display text-[1.85rem] md:text-[2.25rem] leading-[1.1] tracking-[-0.01em] text-ink">
                       {s.title}
                     </h2>
