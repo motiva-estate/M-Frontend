@@ -7,6 +7,7 @@ import type {
   SanityJournalEntry,
   SanityLand,
   SanityProject,
+  SanityService,
 } from "./types";
 
 const PROJECT_PROJECTION = `{
@@ -146,6 +147,18 @@ export const journalEntriesQueryOptions = queryOptions({
     sanityClient.fetch<SanityJournalEntry[]>(
       `*[_type == "journalEntry"] | order(order asc, publishedAt desc){
         _id, title, "slug": slug.current, category, excerpt, publishedAt, readingTime, cover, coverUrl, order
+      }`,
+    ),
+});
+
+// ─── Services ─────────────────────────────────────────────
+
+export const servicesQueryOptions = queryOptions({
+  queryKey: ["sanity", "services"],
+  queryFn: () =>
+    sanityClient.fetch<SanityService[]>(
+      `*[_type == "service"] | order(order asc, number asc){
+        _id, number, title, "slug": slug.current, lede, body, items, icon, order
       }`,
     ),
 });
