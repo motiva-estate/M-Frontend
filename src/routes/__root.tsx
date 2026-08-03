@@ -78,31 +78,76 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Motiva Estate Company — Integrated Real-Estate Solutions" },
+      // ── Primary meta ──────────────────────────────────────────────────────
+      { title: "Motiva Estate Company — Real Estate in Lagos, Abuja & Ogun State" },
       {
         name: "description",
         content:
-          "Motiva Estate Company delivers fully integrated real-estate solutions across Lagos and Abuja since 2010 — development, advisory, property and facilities management, project delivery and brokerage.",
+          "Motiva Estate Company — Nigeria's fully integrated real-estate practice since 2010. Premium residences, land investment, property management and brokerage across Lagos, Abuja and Ogun State.",
       },
       { name: "author", content: "Motiva Estate Company" },
-      { property: "og:title", content: "Motiva Estate Company — Integrated Real-Estate Solutions" },
+      {
+        name: "keywords",
+        content:
+          "real estate Nigeria, property for sale Abuja, houses for sale Lagos, Ogun State property, land for sale Abuja, luxury homes Nigeria, real estate investment Nigeria, property developer Abuja, buy house Lagos, Katampe Extension land, Motiva Estate, integrated real estate, property management Nigeria, off-plan houses Abuja, pre-sale residences Nigeria",
+      },
+      // ── Geo targeting ────────────────────────────────────────────────────
+      { name: "geo.region", content: "NG" },
+      { name: "geo.placename", content: "Abuja, Lagos, Ogun State" },
+      { name: "geo.position", content: "9.0765;7.3986" },
+      { name: "ICBM", content: "9.0765, 7.3986" },
+      // ── Open Graph ────────────────────────────────────────────────────────
+      { property: "og:site_name", content: "Motiva Estate Company" },
+      { property: "og:locale", content: "en_NG" },
+      {
+        property: "og:title",
+        content: "Motiva Estate Company — Real Estate in Lagos, Abuja & Ogun State",
+      },
       {
         property: "og:description",
         content:
-          "Fully integrated real-estate solutions across Lagos and Abuja since 2010. Development, advisory, management, project delivery and brokerage — under one roof.",
+          "Premium residences, land investment and property management across Lagos, Abuja and Ogun State. Fully integrated real-estate solutions since 2010.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.motivaestate.com" },
       { property: "og:image", content: ogImage },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "Motiva Estate Company — premium real estate in Nigeria",
+      },
+      // ── Twitter / X ───────────────────────────────────────────────────────
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Motiva Estate Company — Integrated Real-Estate Solutions" },
+      { name: "twitter:site", content: "@motivaestate" },
+      {
+        name: "twitter:title",
+        content: "Motiva Estate Company — Real Estate in Lagos, Abuja & Ogun State",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Premium residences, land investment and property management across Lagos, Abuja and Ogun State.",
+      },
       { name: "twitter:image", content: ogImage },
+      // ── Search engine directives ─────────────────────────────────────────
+      {
+        name: "robots",
+        content: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+      },
+      { name: "googlebot", content: "index, follow" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      // Icons
+      { rel: "icon", href: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
       { rel: "icon", href: "/favicon.ico", sizes: "any" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "512x512" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      // Web manifest
+      { rel: "manifest", href: "/site.webmanifest" },
+      // Canonical
+      { rel: "canonical", href: "https://www.motivaestate.com" },
+      // Fonts
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -115,21 +160,79 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Organization",
+          "@type": "RealEstateAgent",
+          "@id": "https://www.motivaestate.com/#organization",
           name: "Motiva Estate Company",
-          alternateName: "MEC",
+          alternateName: ["MEC", "Motiva Estate", "Motiva Real Estate"],
           url: "https://www.motivaestate.com",
-          logo: "/favicon.ico",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://www.motivaestate.com/apple-touch-icon.png",
+            width: 512,
+            height: 512,
+          },
+          image: ogImage,
           foundingDate: "2010",
           email: "askme@motivaestate.com",
           telephone: "+234-815-324-2398",
-          areaServed: ["Lagos", "Abuja"],
-          address: [
-            { "@type": "PostalAddress", streetAddress: "5 OP Fingesi Street, Utako", addressLocality: "Abuja", addressCountry: "NG" },
-            { "@type": "PostalAddress", streetAddress: "11 Michael Adebamowo, Olorunda Estate, Ketu", addressLocality: "Lagos", addressCountry: "NG" },
-          ],
           description:
-            "Motiva Estate Company delivers fully integrated real-estate solutions across Lagos and Abuja since 2010 — development, advisory, property and facilities management, project delivery and brokerage.",
+            "Motiva Estate Company delivers fully integrated real-estate solutions across Lagos, Abuja and Ogun State since 2010 — development, advisory, property and facilities management, project delivery and brokerage.",
+          areaServed: [
+            {
+              "@type": "State",
+              name: "Abuja",
+              containedInPlace: { "@type": "Country", name: "Nigeria" },
+            },
+            {
+              "@type": "State",
+              name: "Lagos",
+              containedInPlace: { "@type": "Country", name: "Nigeria" },
+            },
+            {
+              "@type": "State",
+              name: "Ogun State",
+              containedInPlace: { "@type": "Country", name: "Nigeria" },
+            },
+          ],
+          address: [
+            {
+              "@type": "PostalAddress",
+              streetAddress: "5 OP Fingesi Street, Utako",
+              addressLocality: "Abuja",
+              addressRegion: "FCT",
+              addressCountry: "NG",
+            },
+            {
+              "@type": "PostalAddress",
+              streetAddress: "11 Michael Adebamowo, Olorunda Estate, Ketu",
+              addressLocality: "Lagos",
+              addressCountry: "NG",
+            },
+          ],
+          sameAs: [
+            "https://www.instagram.com/motivaestate",
+            "https://www.linkedin.com/company/motivaestate",
+          ],
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: "Real Estate Services",
+            itemListElement: [
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "Property Development" },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "Real Estate Advisory" },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "Property Management" },
+              },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Project Delivery" } },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Property Brokerage" } },
+            ],
+          },
         }),
       },
     ],

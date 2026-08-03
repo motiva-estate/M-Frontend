@@ -7,7 +7,8 @@ export interface SanityImageRef {
   asset?: { _ref: string; _type: "reference" };
 }
 
-export type ImageLike = SanityImageRef | { url?: string; caption?: string } | string | null | undefined;
+export type ImageLike =
+  SanityImageRef | { url?: string; caption?: string } | string | null | undefined;
 
 export interface SanityProject {
   _id: string;
@@ -92,6 +93,8 @@ export interface SanityJournalEntry {
   readingTime?: string;
   cover?: ImageLike;
   coverUrl?: string;
+  /** Plain-text or markdown body. Rendered as-is on the article page. */
+  body?: string;
   order?: number;
 }
 

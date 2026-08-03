@@ -151,6 +151,19 @@ export const journalEntriesQueryOptions = queryOptions({
     ),
 });
 
+export const journalEntryBySlugQueryOptions = (slug: string) =>
+  queryOptions({
+    queryKey: ["sanity", "journalEntry", slug],
+    queryFn: () =>
+      sanityClient.fetch<SanityJournalEntry | null>(
+        `*[_type == "journalEntry" && slug.current == $slug][0]{
+          _id, title, "slug": slug.current, category, excerpt, publishedAt,
+          readingTime, cover, coverUrl, body, order
+        }`,
+        { slug },
+      ),
+  });
+
 // ─── Services ─────────────────────────────────────────────
 
 export const servicesQueryOptions = queryOptions({

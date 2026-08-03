@@ -1,2 +1,24 @@
 User-agent: *
 Allow: /
+
+# Disallow admin and portal routes — not for public indexing
+Disallow: /admin
+Disallow: /admin/
+Disallow: /portal
+Disallow: /portal/
+
+# Allow all content pages
+Allow: /projects/
+Allow: /land/
+Allow: /journal/
+Allow: /gallery
+Allow: /about
+Allow: /services
+Allow: /faq
+Allow: /contact
+
+# Crawl-delay for polite bots
+Crawl-delay: 10
+
+# Sitemap
+Sitemap: https://www.motivaestate.com/sitemap.xml

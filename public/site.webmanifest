@@ -1,0 +1,26 @@
+{
+  "name": "Motiva Estate Company",
+  "short_name": "Motiva",
+  "description": "Fully integrated real-estate solutions across Lagos, Abuja and Ogun State — development, advisory, management, project delivery and brokerage since 2010.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0E8",
+  "theme_color": "#1A1A1A",
+  "orientation": "portrait-primary",
+  "categories": ["real estate", "property", "finance"],
+  "lang": "en-NG",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": []
+}

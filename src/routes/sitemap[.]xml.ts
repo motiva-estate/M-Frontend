@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { sanityClient } from "@/lib/sanity/client";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
-const BASE_URL = "";
+// Production URL — update if the domain changes.
+const BASE_URL = "https://www.motivaestate.com";
 
 interface SitemapEntry {
   path: string;
@@ -15,9 +15,14 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const [projectSlugs, landSlugs] = await Promise.all([
-          sanityClient.fetch<string[]>(`*[_type == "project" && defined(slug.current)].slug.current`),
+        const [projectSlugs, landSlugs, journalSlugs] = await Promise.all([
+          sanityClient.fetch<string[]>(
+            `*[_type == "project" && defined(slug.current)].slug.current`,
+          ),
           sanityClient.fetch<string[]>(`*[_type == "land" && defined(slug.current)].slug.current`),
+          sanityClient.fetch<string[]>(
+            `*[_type == "journalEntry" && defined(slug.current)].slug.current`,
+          ),
         ]);
 
         const entries: SitemapEntry[] = [
@@ -27,10 +32,24 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/projects", changefreq: "weekly", priority: "0.9" },
           { path: "/land", changefreq: "weekly", priority: "0.9" },
           { path: "/gallery", changefreq: "monthly", priority: "0.6" },
+          { path: "/journal", changefreq: "weekly", priority: "0.8" },
           { path: "/faq", changefreq: "monthly", priority: "0.5" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
-          ...projectSlugs.map((s) => ({ path: `/projects/${s}`, changefreq: "weekly" as const, priority: "0.8" })),
-          ...landSlugs.map((s) => ({ path: `/land/${s}`, changefreq: "weekly" as const, priority: "0.8" })),
+          ...projectSlugs.map((s) => ({
+            path: `/projects/${s}`,
+            changefreq: "weekly" as const,
+            priority: "0.8",
+          })),
+          ...landSlugs.map((s) => ({
+            path: `/land/${s}`,
+            changefreq: "weekly" as const,
+            priority: "0.8",
+          })),
+          ...journalSlugs.map((s) => ({
+            path: `/journal/${s}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
         ];
 
         const urls = entries.map((e) =>
