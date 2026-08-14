@@ -40,7 +40,7 @@ export function OfficeMap() {
               <iframe
                 title={`Map of Motiva Estate Company office at ${ADDRESS}`}
                 src={MAP_SRC}
-                loading="lazy"
+                loading="eager"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="h-full w-full grayscale-[0.35]"
                 style={{ border: 0 }}
