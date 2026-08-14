@@ -13,6 +13,9 @@ import { ContactCTA } from "@/components/motiva/ContactCTA";
 import { Footer } from "@/components/motiva/Footer";
 import { WhatsAppBubble } from "@/components/motiva/WhatsAppBubble";
 import { journalEntriesQueryOptions } from "@/lib/sanity/queries";
+import { MissionVision } from "@/components/motiva/MissionVision";
+import { WhyInvest } from "@/components/motiva/WhyInvest";
+import { OfficeMap } from "@/components/motiva/OfficeMap";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(journalEntriesQueryOptions),
@@ -24,8 +27,10 @@ function Index() {
     <main className="bg-ivory text-ink">
       <Nav />
       <Hero />
-      <Marquee />
+      {/* <Marquee /> */}
       <About />
+      <MissionVision/>
+      <WhyInvest/>
       <Residences />
       <LandTeaser />
       <Pillars />
@@ -33,6 +38,7 @@ function Index() {
       <Gallery />
       <Journal />
       <ContactCTA />
+      <OfficeMap/>
       <Footer />
       <WhatsAppBubble />
     </main>

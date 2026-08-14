@@ -20,13 +20,13 @@ export function Residences() {
         <div className="grid md:grid-cols-12 gap-10 items-end mb-20">
           <div className="md:col-span-8">
             <div data-reveal className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">
-              003 — Residences in pre-sale
+              005 — Projects in pre-sale
             </div>
             <h2 data-reveal className="font-display text-[2.5rem] md:text-[4rem] lg:text-[5rem] leading-[1] tracking-[-0.02em] text-ink">
               A small, honest set,<br />currently in planning.
             </h2>
             <p data-reveal className="mt-6 text-[15px] text-ink/60 max-w-xl">
-              Six residences across Abuja. Pricing and timelines move with approvals — enquire on WhatsApp for the current terms of the one that matters to you.
+              Six projects across Abuja. Pricing and timelines move with approvals — enquire on WhatsApp for the current terms of the one that matters to you.
             </p>
           </div>
           <Link
@@ -34,7 +34,7 @@ export function Residences() {
             to="/projects"
             className="md:col-span-4 md:justify-self-end inline-flex items-center gap-3 text-sm tracking-wide text-ink border-b border-ink/40 pb-2 hover:border-ink transition-colors w-fit"
           >
-            View all residences
+            View all projects
             <ArrowUpRight className="h-4 w-4" strokeWidth={1.25} />
           </Link>
         </div>

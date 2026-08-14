@@ -33,7 +33,7 @@ export function Pillars() {
         <div className="grid md:grid-cols-12 gap-10 md:gap-16 mb-20 md:mb-28">
           <div className="md:col-span-4">
             <div data-reveal className="text-[10px] tracking-[0.4em] uppercase text-ivory/50 mb-6">
-              004 — Principles
+              007 — Principles
             </div>
           </div>
           <div className="md:col-span-8">

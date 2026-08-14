@@ -30,7 +30,7 @@ function ServicesPage() {
       <Nav />
       <main className="flex-1">
         <PageHeader
-          eyebrow="003 — Practice"
+          eyebrow="005 — Services"
           title={<>Six disciplines,<br />one standard.</>}
           intro="Motiva is a fully integrated real-estate practice. Every engagement — from land acquisition to hour-by-hour facilities response — is carried by one team under one written standard of care."
           crumbs={[{ label: "Motiva", to: "/" }, { label: "Services" }]}

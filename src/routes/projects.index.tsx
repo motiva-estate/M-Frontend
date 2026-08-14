@@ -94,21 +94,21 @@ function ProjectsIndex() {
   return (
     <>
       <PageHeader
-        eyebrow="002 — Residences"
+        eyebrow="002 — Projects"
         title={
           <>
-            Residences currently<br />in pre-sale.
+            Projects currently<br />in pre-sale.
           </>
         }
-        intro="A small, honest set of residences in review and planning across Abuja. Pricing and delivery timelines move with approvals — we quote current terms per enquiry."
-        crumbs={[{ label: "Motiva", to: "/" }, { label: "Residences" }]}
+        intro="A small, honest set of projects in review and planning across Abuja. Pricing and delivery timelines move with approvals — we quote current terms per enquiry."
+        crumbs={[{ label: "Motiva", to: "/" }, { label: "Projects" }]}
         right={
           <div className="text-right">
             <div className="font-display text-5xl md:text-6xl text-ink leading-none">
               {String(filtered.length).padStart(2, "0")}
             </div>
             <div className="mt-2 text-[10px] tracking-[0.3em] uppercase text-ink/50">
-              {filtered.length === 1 ? "Residence shown" : "Residences shown"}
+              {filtered.length === 1 ? "Project shown" : "Project shown"}
             </div>
           </div>
         }
@@ -264,7 +264,7 @@ function EmptyState({ onReset }: { onReset: () => void }) {
   return (
     <div className="py-24 text-center">
       <div className="font-display text-4xl md:text-5xl text-ink mb-4">
-        No residences match those filters.
+        No projects match those filters.
       </div>
       <p className="text-ink/60 max-w-md mx-auto mb-8">
         Try widening your search — or reach out and we'll walk through what's currently available.

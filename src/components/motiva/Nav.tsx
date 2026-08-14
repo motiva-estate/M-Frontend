@@ -11,12 +11,25 @@ if (!CustomEase.get("motivaCurtain")) {
 
 type NavLink = { label: string; to: string; hash?: boolean };
 const links: NavLink[] = [
-  { label: "Residences", to: "/projects" },
+  { label: "Projects", to: "/projects" },
   { label: "Land", to: "/land" },
+  { label: "About", to: "/about" },
   { label: "Services", to: "/services" },
-  { label: "Studio", to: "/about" },
   { label: "Gallery", to: "/gallery" },
   { label: "Contact", to: "/contact" },
+];
+
+// Top-level pages get a dark ink nav; nested routes and the homepage stay
+// transparent until scrolled, then switch to the ivory glass treatment.
+const darkTopLevelRoutes = [
+  "/projects",
+  "/land",
+  "/services",
+  "/about",
+  "/gallery",
+  "/contact",
+  "/faq",
+  "/journal",
 ];
 
 const PANEL_COUNT = 5;
@@ -26,7 +39,9 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const [rendered, setRendered] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isHome = pathname === "/";
+  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  const isDarkPage = darkTopLevelRoutes.includes(normalized);
+  // const isHome = pathname === "/";
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelsRef = useRef<HTMLDivElement[]>([]);
@@ -41,7 +56,8 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const inverted = !isHome || scrolled;
+  // const inverted = isSolidPage || scrolled;
+  // const anotherPage = !isHome;
 
   // mount overlay when opening; unmount after close animation
   useEffect(() => {
@@ -139,20 +155,64 @@ export function Nav() {
     };
   }, [rendered]);
 
+  const headerBg = open
+    ? "bg-transparent"
+    : isDarkPage
+      ? "bg-ink text-white"
+      : scrolled
+        ? "bg-ivory/90 backdrop-blur-xl border-b border-ink/10"
+        : "bg-transparent";
+
+  const logoClass = open
+    ? "text-ivory"
+    : isDarkPage
+      ? "text-white"
+      : scrolled
+        ? "text-ink"
+        : "text-ivory";
+
+  const navLinkBase = open
+    ? "text-ivory/80 hover:text-ivory"
+    : isDarkPage
+      ? "text-white/80 hover:text-white"
+      : scrolled
+        ? "text-ink/70 hover:text-ink"
+        : "text-ivory/80 hover:text-ivory";
+
+  const activeLinkClass = open
+    ? "text-ivory"
+    : isDarkPage
+      ? "text-white"
+      : scrolled
+        ? "text-ink"
+        : "text-ivory";
+
+  const ctaClass = open
+    ? "text-ivory border-ivory/40 hover:border-ivory"
+    : isDarkPage
+      ? "text-white border-white/40 hover:border-white"
+      : scrolled
+        ? "text-ink border-ink/40 hover:border-ink"
+        : "text-ivory border-ivory/40 hover:border-ivory";
+
+  const buttonClass = open
+    ? "text-ivory"
+    : isDarkPage
+      ? "text-white"
+      : scrolled
+        ? "text-ink"
+        : "text-ivory";
+
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-          inverted && !open ? "bg-ivory/90 backdrop-blur-xl border-b border-ink/10" : "bg-transparent"
-        }`}
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${headerBg}`}
       >
         <div className="mx-auto max-w-[1500px] px-6 md:px-10">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link
               to="/"
-              className={`font-display text-2xl tracking-tight relative z-[60] ${
-                open ? "text-ivory" : inverted ? "text-ink" : "text-ivory"
-              }`}
+              className={`font-display text-2xl tracking-tight relative z-[60] ${logoClass}`}
             >
               Motiva
             </Link>
@@ -163,9 +223,7 @@ export function Nav() {
                   <a
                     key={l.to}
                     href={l.to}
-                    className={`text-[13px] tracking-wide transition-colors ${
-                      inverted ? "text-ink/70 hover:text-ink" : "text-ivory/80 hover:text-ivory"
-                    }`}
+                    className={`text-[13px] tracking-wide transition-colors ${navLinkBase}`}
                   >
                     {l.label}
                   </a>
@@ -173,10 +231,8 @@ export function Nav() {
                   <Link
                     key={l.to}
                     to={l.to}
-                    className={`text-[13px] tracking-wide transition-colors ${
-                      inverted ? "text-ink/70 hover:text-ink" : "text-ivory/80 hover:text-ivory"
-                    }`}
-                    activeProps={{ className: inverted ? "text-ink" : "text-ivory" }}
+                    className={`text-[13px] tracking-wide transition-colors ${navLinkBase}`}
+                    activeProps={{ className: activeLinkClass }}
                   >
                     {l.label}
                   </Link>
@@ -185,7 +241,7 @@ export function Nav() {
             </nav>
 
             <div className="flex items-center gap-6">
-              <Link
+              {/* <Link
                 to="/contact"
                 search={{ intent: "inspection" }}
                 className={`hidden sm:inline-block text-[13px] tracking-wide border-b pb-0.5 transition-colors relative z-[60] ${
@@ -197,12 +253,17 @@ export function Nav() {
                 }`}
               >
                 Book an inspection
+              </Link> */}
+              <Link
+                to="/contact"
+                // search={{ intent: "inspection" }}
+                className={`hidden sm:inline-block text-[13px] tracking-wide border-b pb-0.5 transition-colors relative z-[60] ${ctaClass}`}
+              >
+                Make Enquiry
               </Link>
               <button
                 onClick={() => setOpen((o) => !o)}
-                className={`lg:hidden relative z-[60] ${
-                  open ? "text-ivory" : inverted ? "text-ink" : "text-ivory"
-                }`}
+                className={`lg:hidden relative z-[60] ${buttonClass}`}
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
               >

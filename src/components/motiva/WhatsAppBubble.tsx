@@ -12,7 +12,7 @@ export function WhatsAppBubble() {
       <span className="h-9 w-9 rounded-full bg-gilt text-ink flex items-center justify-center">
         <MessageCircle className="h-4 w-4" strokeWidth={1.5} />
       </span>
-      <span className="hidden sm:inline text-[13px] tracking-wide">Talk to a specialist</span>
+      <span className="hidden sm:inline text-[13px] tracking-wide">Talk to us</span>
     </a>
   );
 }

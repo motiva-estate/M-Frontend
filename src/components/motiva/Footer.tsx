@@ -61,7 +61,7 @@ export function Footer() {
             <ul className="space-y-3 text-[13px] text-ink/70">
               <li>
                 <Link to="/projects" className="hover:text-ink">
-                  Residences
+                  Projects
                 </Link>
               </li>
               <li>
@@ -106,16 +106,37 @@ export function Footer() {
         <div className="pt-8 border-t border-ink/10 flex flex-wrap items-center justify-between gap-4 text-[12px] text-ink/50">
           <span>© {new Date().getFullYear()} Motiva Estate Company Ltd.</span>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-ink">
+            <a 
+            href="https://www.instagram.com/motivaestate?igsh=MXk1YWd2dTI6bjRz&igsi=MXk1YWd2dTI6bjRz" 
+            referrerPolicy="no-referrer" 
+            target="_blank"
+            rel="noreferrer" 
+            className="hover:text-ink"
+            >
               Instagram
             </a>
-            <a href="#" className="hover:text-ink">
+            <a 
+            href="#" 
+            referrerPolicy="no-referrer" 
+            target="_blank"
+            rel="noreferrer" 
+            className="hover:text-ink"
+            >
               LinkedIn
             </a>
-            <a href="#" className="hover:text-ink">
+            <a 
+            href="#" 
+            referrerPolicy="no-referrer" 
+            target="_blank"
+            rel="noreferrer" 
+            className="hover:text-ink"
+            >
               Pinterest
             </a>
-            <a href="#" className="hover:text-ink">
+            <a 
+            href="#" 
+            className="hover:text-ink"
+            >
               Privacy
             </a>
           </div>

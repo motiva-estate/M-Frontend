@@ -27,7 +27,7 @@ export function Gallery() {
         <div className="grid md:grid-cols-12 gap-10 items-end mb-20">
           <div className="md:col-span-8">
             <div data-reveal className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">
-              006 — Recent Works
+              009 — Recent Works
             </div>
             <h2 data-reveal className="font-display text-[2.5rem] md:text-[4rem] leading-[1] tracking-[-0.02em] text-ink">
               Fragments from<br />the last season.

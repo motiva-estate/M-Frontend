@@ -75,10 +75,10 @@ function About() {
       <Nav />
       <main className="flex-1">
         <PageHeader
-          eyebrow="004 — The Practice"
+          eyebrow="004 — About Us"
           title={<>A practice, not<br />a placeholder.</>}
           intro="Motiva Estate Company (MEC) is a limited liability company founded in 2010 by a team of experienced built-environment professionals. With offices in Lagos and Abuja, we deliver fully integrated real-estate solutions to private, corporate and public-sector clients."
-          crumbs={[{ label: "Motiva", to: "/" }, { label: "Practice" }]}
+          crumbs={[{ label: "Motiva", to: "/" }, { label: "About" }]}
         />
 
 
@@ -232,12 +232,12 @@ function About() {
           <div className="mx-auto max-w-[1500px] px-6 md:px-10 grid md:grid-cols-12 gap-10 items-end">
             <div className="md:col-span-8">
               <h2 className="font-display text-[2.5rem] md:text-[4rem] leading-[1] text-ivory">
-                See the residences, or begin a conversation.
+                See the projects, or begin a conversation.
               </h2>
             </div>
             <div className="md:col-span-4 md:justify-self-end flex flex-col gap-3 w-full md:w-auto">
               <Link to="/projects" className="inline-flex items-center justify-between gap-6 border-b border-ivory/40 pb-3 text-sm tracking-wide hover:border-ivory transition-colors">
-                <span>View residences</span>
+                <span>View projects</span>
                 <ArrowUpRight className="h-4 w-4" strokeWidth={1.25} />
               </Link>
               <Link to="/contact" className="inline-flex items-center justify-between gap-6 border-b border-gilt pb-3 text-sm tracking-wide text-gilt hover:text-ivory">

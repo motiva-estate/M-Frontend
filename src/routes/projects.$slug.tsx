@@ -70,7 +70,7 @@ export const Route = createFileRoute("/projects/$slug")({
         <h1 className="font-display text-5xl mb-4">Not in our portfolio.</h1>
         <p className="text-ink/60 mb-8">The residence you're looking for isn't part of Motiva's current work.</p>
         <Link to="/projects" className="text-[13px] tracking-wide bg-ink text-ivory px-5 py-2 rounded-full hover:bg-ink/90">
-          Browse all residences
+          Browse all projects
         </Link>
       </div>
     </div>
@@ -101,7 +101,7 @@ function ProjectDetail() {
           <nav className="pt-28 md:pt-32 flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-ivory/70">
             <Link to="/" className="hover:text-ivory">Motiva</Link>
             <span>/</span>
-            <Link to="/projects" className="hover:text-ivory">Residences</Link>
+            <Link to="/projects" className="hover:text-ivory">Projects</Link>
             <span>/</span>
             <span className="text-ivory">{project.title}</span>
           </nav>

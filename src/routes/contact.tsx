@@ -206,7 +206,7 @@ function ContactPage() {
 
 // ── Interest → what additional field to show ──────────────────────────────────
 type Interest =
-  | "A specific residence"
+  | "A specific project"
   | "Land"
   | "A general portfolio conversation"
   | "Diaspora buying"
@@ -214,7 +214,7 @@ type Interest =
   | "Investment / partnership";
 
 const INTERESTS: Interest[] = [
-  "A specific residence",
+  "A specific project",
   "Land",
   "A general portfolio conversation",
   "Diaspora buying",
@@ -227,7 +227,7 @@ function EnquiryForm({ defaultProject }: { defaultProject: string }) {
   const { data: lands } = useQuery(landQueryOptions);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const [interest, setInterest] = useState<Interest>("A specific residence");
+  const [interest, setInterest] = useState<Interest>("A specific project");
 
   async function handle(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -265,7 +265,7 @@ function EnquiryForm({ defaultProject }: { defaultProject: string }) {
       });
       setDone(true);
       form.reset();
-      setInterest("A specific residence");
+      setInterest("A specific project");
       toast.success("Your enquiry is with the sales team. Reply within the working day.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong — please try again.");
@@ -290,7 +290,7 @@ function EnquiryForm({ defaultProject }: { defaultProject: string }) {
     );
   }
 
-  const showResidences = interest === "A specific residence";
+  const showResidences = interest === "A specific project";
   const showLand = interest === "Land";
 
   return (
@@ -323,7 +323,7 @@ function EnquiryForm({ defaultProject }: { defaultProject: string }) {
       {/* Conditionally show residence OR land picker */}
       {showResidences && (
         <PropertyPicker
-          label="Which residence?"
+          label="Which project?"
           items={(projects ?? []).map((p) => ({ id: p._id, name: p.title }))}
           defaultId={defaultProject}
         />

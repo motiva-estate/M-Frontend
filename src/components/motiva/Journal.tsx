@@ -27,7 +27,7 @@ export function Journal() {
         <div className="grid md:grid-cols-12 gap-10 items-end mb-20">
           <div className="md:col-span-8">
             <div data-reveal className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">
-              007 — The Journal
+              010 — The Journal
             </div>
             <h2
               data-reveal

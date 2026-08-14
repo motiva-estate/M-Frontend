@@ -48,7 +48,7 @@ export function ContactCTA() {
         <div className="grid md:grid-cols-12 gap-14 md:gap-20">
           <div className="md:col-span-6">
             <div data-reveal className="text-[10px] tracking-[0.4em] uppercase text-ivory/50 mb-8">
-              008 — Begin a conversation
+              011 — Begin a conversation
             </div>
             <h2
               data-reveal
@@ -57,7 +57,7 @@ export function ContactCTA() {
               Let us design the one that lasts.
             </h2>
             <p data-reveal className="mt-10 text-[15px] leading-relaxed text-ivory/70 max-w-md">
-              We take on a small number of new residences each year. Share a little about your plot,
+              We take on a small number of new projects each year. Share a little about your plot,
               your rhythm, your reasons — we will respond within two working days.
             </p>
 

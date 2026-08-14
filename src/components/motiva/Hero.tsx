@@ -168,10 +168,10 @@ export function Hero() {
             style={{ fontSize: "clamp(2.75rem, 7.6vw, 7.5rem)" }}
           >
             <span className="block">
-              <SegmentedHeadline line="Motiva — a fully integrated" />
+              <SegmentedHeadline line="We are a fully integrated" />
             </span>
             <span className="block">
-              <SegmentedHeadline line="real-estate practice." />
+              <SegmentedHeadline line="real-estate development company." />
             </span>
           </h1>
           <p className="sr-only">
@@ -197,7 +197,7 @@ export function Hero() {
                 href="#residences"
                 className="inline-flex items-center justify-between gap-6 border-b border-ivory/40 pb-3 text-sm tracking-wide hover:border-ivory transition-colors"
               >
-                <span>Explore the residences</span>
+                <span>Explore projects</span>
                 <ArrowUpRight className="h-4 w-4" strokeWidth={1.25} />
               </a>
               <a
@@ -205,7 +205,7 @@ export function Hero() {
                 href="#about"
                 className="inline-flex items-center justify-between gap-6 border-b border-ivory/40 pb-3 text-sm tracking-wide hover:border-ivory transition-colors"
               >
-                <span>Inside the studio</span>
+                <span>Who we are</span>
                 <ArrowUpRight className="h-4 w-4" strokeWidth={1.25} />
               </a>
             </div>

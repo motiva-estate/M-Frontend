@@ -8,12 +8,12 @@ export function About() {
         <div className="grid md:grid-cols-12 gap-10 md:gap-16">
           <div className="md:col-span-4">
             <div className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-8">
-              002 — The Practice
+              002 — About Motiva
             </div>
             <div className="text-[13px] tracking-wide text-ink/60 space-y-1">
               <div>Lagos &amp; Abuja</div>
               <div>Founded 2010</div>
-              <div>Integrated real-estate practice</div>
+              <div>Integrated real-estate development company</div>
             </div>
           </div>
 

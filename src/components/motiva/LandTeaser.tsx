@@ -20,7 +20,7 @@ export function LandTeaser() {
         <div className="grid md:grid-cols-12 gap-10 items-end mb-16">
           <div className="md:col-span-8">
             <div data-reveal className="text-[10px] tracking-[0.4em] uppercase text-ink/50 mb-6">
-              004 — Land
+              006 — Land
             </div>
             <h2 data-reveal className="font-display text-[2.5rem] md:text-[4rem] lg:text-[5rem] leading-[1] tracking-[-0.02em] text-ink">
               Estate land at<br />Katampe Extension.
